@@ -1,21 +1,37 @@
 import React from 'react';
 
-function CartItem({ item, updateQuantity, removeItem }) {
-  const total = item.price * item.quantity;
+function CartItem({ cartItems, updateQuantity, removeItem }) {
+  const grandTotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   return (
-    <div className="cart-item">
-      <img src={item.image} alt={item.name} width="100" />
+    <div>
+      <h2>Shopping Cart</h2>
 
-      <h3>{item.name}</h3>
-      <p>Unit Price: ${item.price}</p>
-      <p>Total Cost: ${total}</p>
+      {cartItems.map((item) => {
+        const total = item.price * item.quantity;
 
-      <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
-      <span>{item.quantity}</span>
-      <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+        return (
+          <div key={item.id} className="cart-item">
+            <img src={item.image} alt={item.name} width="100" />
 
-      <button onClick={() => removeItem(item.id)}>Delete</button>
+            <h3>{item.name}</h3>
+            <p>Unit Price: ${item.price}</p>
+            <p>Item Total: ${total}</p>
+
+            <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+            <span> {item.quantity} </span>
+            <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+
+            <button onClick={() => removeItem(item.id)}>Delete</button>
+            <hr />
+          </div>
+        );
+      })}
+
+      <h2>Total Cart Amount: ${grandTotal}</h2>
     </div>
   );
 }
